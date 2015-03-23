@@ -11,6 +11,9 @@
  */
 
 namespace Controllers;
+use Common\Authentication\fileLoaded;
+use Common\Authentication\inMemory;
+use Common\Authentication\mySQL;
 
 
 /**
@@ -28,6 +31,21 @@ class AuthController extends Controller
         $postData = $this->request->getPost();
 
         echo 'Authenticate the above two different ways' . var_dump($postData);
+
+        if ($postData->authSelect =='FileBased') {
+            $loggingUser = new fileLoaded($postData);
+        }
+        else if ($postData->authSelect =='InMemory'){
+            $loggingUser = new inMemory($postData) ;
+        }
+        else if ($postData->authSelect =='mySQL'){
+            $loggingUser = new mySQL($postData) ;
+        }
+        if ($loggingUser->authenticate()) {
+             echo "Thanks for logging in";       
+        } else {
+             echo "Sorry Please try again";
+        }
 
         // example code: $auth = new Authentication($postData['username'], $postData['password']);
     }
